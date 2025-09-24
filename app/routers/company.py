@@ -9,7 +9,14 @@ from starlette import status
 router = APIRouter(prefix="/companies", tags=["Company"])
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=CompanyDto)
+@router.post(
+    "/",
+    status_code=status.HTTP_201_CREATED,
+    response_model=CompanyDto,
+    description="""##
+    - Admin can create company
+    - Normal user can not create company""",
+)
 def create_company(
     request: CreateCompanyDto,
     user=Depends(token_interceptor),
@@ -19,7 +26,14 @@ def create_company(
     return company_service.create_company(request, db)
 
 
-@router.get("/", status_code=status.HTTP_200_OK, response_model=list[CompanyDto])
+@router.get(
+    "/",
+    status_code=status.HTTP_200_OK,
+    response_model=list[CompanyDto],
+    description="""##
+    - Admin can get all companies
+    - Normal user can not get all companies""",
+)
 def get_companies(
     page: int = Query(default=1, ge=1),
     limit: int = Query(default=10, ge=1),
@@ -30,7 +44,14 @@ def get_companies(
     return company_service.get_companies(page, limit, db)
 
 
-@router.get("/{company_id}", status_code=status.HTTP_200_OK, response_model=CompanyDto)
+@router.get(
+    "/{company_id}",
+    status_code=status.HTTP_200_OK,
+    response_model=CompanyDto,
+    description="""##
+    - Admin can get any company
+    - Normal user can get their company they are assigned to""",
+)
 def get_company_by_id(
     company_id: str,
     user=Depends(token_interceptor),
@@ -39,7 +60,14 @@ def get_company_by_id(
     return company_service.get_company_by_id(company_id, user, db)
 
 
-@router.put("/{company_id}", status_code=status.HTTP_200_OK, response_model=CompanyDto)
+@router.put(
+    "/{company_id}",
+    status_code=status.HTTP_200_OK,
+    response_model=CompanyDto,
+    description="""##
+    - Admin can update any company
+    - Normal user can not update company""",
+)
 def update_company(
     company_id: str,
     request: UpdateCompanyDto,
@@ -50,7 +78,13 @@ def update_company(
     return company_service.update_company(company_id, request, db)
 
 
-@router.delete("/{company_id}", status_code=status.HTTP_200_OK)
+@router.delete(
+    "/{company_id}",
+    status_code=status.HTTP_200_OK,
+    description="""##
+    - Admin can delete any company
+    - Normal user can not delete company""",
+)
 def delete_company(
     company_id: str,
     user=Depends(token_interceptor),
