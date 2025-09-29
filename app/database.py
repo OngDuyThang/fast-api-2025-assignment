@@ -1,30 +1,27 @@
-from settings import SQLALCHEMY_DATABASE_URL, SQLALCHEMY_DATABASE_URL_ASYNC
-from sqlalchemy import MetaData, create_engine
-from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
+from settings import SQLALCHEMY_DATABASE_URL
+from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+Base = declarative_base()
+metadata = Base.metadata
+
+engine = None
+SessionLocal = None
+
+
+def init_engine():
+    global engine, SessionLocal
+    if engine is None:
+        engine = create_engine(SQLALCHEMY_DATABASE_URL)
+        SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 
 def get_db_context():
-    db = None
+    if SessionLocal is None:
+        init_engine()
+    db = SessionLocal()
     try:
-        db = SessionLocal()
         yield db
     finally:
-        if db is not None:
-            db.close()
-
-
-# async def get_async_db_context():
-#     async with AsyncSessionLocal() as async_db:
-#         yield async_db
-
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
-# async_engine = create_async_engine(SQLALCHEMY_DATABASE_URL_ASYNC)
-
-metadata = MetaData().create_all(engine)
-
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-# AsyncSessionLocal = async_sessionmaker(async_engine, autocommit=False, autoflush=False)
-
-Base = declarative_base()
+        db.close()

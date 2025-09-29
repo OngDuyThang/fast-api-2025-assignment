@@ -67,7 +67,7 @@ def token_interceptor(token: str = Depends(oa2_bearer)) -> User:
         }
 
         if (user["id"] is None) or (user["username"] is None):
-            raise HTTPException(status_code=401, detail="Unauthorized")
+            raise HTTPException(status_code=401, detail="ABC")
 
         return User(**user)
     except Exception as e:
