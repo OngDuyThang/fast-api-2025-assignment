@@ -20,8 +20,8 @@ def init_engine():
 def get_db_context():
     if SessionLocal is None:
         init_engine()
-    db = SessionLocal()
+    session = SessionLocal()
     try:
-        yield db
+        yield session
     finally:
-        db.close()
+        session.close()
