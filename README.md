@@ -1,3 +1,7 @@
+# 📊 Test Coverage
+![Test Coverage](static/test-coverage.png)
+
+
 # 🚀 FastAPI + PostgreSQL Application
 
 This is a FastAPI application with a PostgreSQL database, managed with Docker Compose.  
@@ -33,3 +37,5 @@ Make sure you have installed:
    ```
 - The API will be available at: http://localhost:8000
 - The interactive Swagger docs: http://localhost:8000/docs
+
+---
